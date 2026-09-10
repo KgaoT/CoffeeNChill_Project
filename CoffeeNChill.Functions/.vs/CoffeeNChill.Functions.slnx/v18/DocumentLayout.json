@@ -1,0 +1,41 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\emeris\\Desktop\\New folder\\CoffeeNChill.Functions\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{E04B7432-A133-71F0-3B25-48E1CCDA0793}|CoffeeNChill.Functions\\CoffeeNChill.Functions.csproj|c:\\users\\emeris\\desktop\\new folder\\coffeenchill.functions\\coffeenchill.functions\\dtos\\staffdocumentresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{E04B7432-A133-71F0-3B25-48E1CCDA0793}|CoffeeNChill.Functions\\CoffeeNChill.Functions.csproj|solutionrelative:coffeenchill.functions\\dtos\\staffdocumentresponse.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "StaffDocumentResponse.cs",
+              "DocumentMoniker": "C:\\Users\\emeris\\Desktop\\New folder\\CoffeeNChill.Functions\\CoffeeNChill.Functions\\DTOs\\StaffDocumentResponse.cs",
+              "RelativeDocumentMoniker": "CoffeeNChill.Functions\\DTOs\\StaffDocumentResponse.cs",
+              "ToolTip": "C:\\Users\\emeris\\Desktop\\New folder\\CoffeeNChill.Functions\\CoffeeNChill.Functions\\DTOs\\StaffDocumentResponse.cs",
+              "RelativeToolTip": "CoffeeNChill.Functions\\DTOs\\StaffDocumentResponse.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABoAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-10T18:03:34.156Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
