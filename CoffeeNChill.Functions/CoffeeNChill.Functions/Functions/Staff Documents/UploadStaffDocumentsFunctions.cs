@@ -1,94 +1,25 @@
-﻿/*namespace CoffeeNChill.Functions.Functions
 using CoffeeNChill.Functions.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Http;
-using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
 
+namespace CoffeeNChill.Functions.Functions.StaffDocuments;
+
+public class UploadStaffDocumentsFunction(IFileStorageService storage)
 {
-    public class DeleteStaffDocumentFunction
+    [Function("UploadStaffDocument")]
+    public async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "documents/upload")] HttpRequest req)
     {
-        private readonly IFileStorageService _fileStorageService;
+        if (!req.HasFormContentType)
+            return new BadRequestObjectResult(new { message = "Content-Type must be multipart/form-data." });
 
-        public DeleteStaffDocumentFunction(
-            IFileStorageService fileStorageService)
-        {
-            _fileStorageService = fileStorageService;
-        }
+        var form = await req.ReadFormAsync();
+        var file = form.Files.GetFile("file") ?? form.Files.FirstOrDefault();
+        if (file is null || file.Length == 0)
+            return new BadRequestObjectResult(new { message = "A non-empty file is required in the 'file' field." });
 
-        [Function("DeleteStaffDocument")]
-        public async Task<HttpResponseData> Run(
-            [HttpTrigger(
-                AuthorizationLevel.Anonymous,
-                "delete",
-                Route = "documents/{fileName}")]
-            HttpRequestData req,
-            string fileName)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(fileName))
-                {
-                    var badRequest =
-                        req.CreateResponse(
-                            HttpStatusCode.BadRequest);
-
-                    await badRequest.WriteAsJsonAsync(new
-                    {
-                        message = "A file name is required."
-                    });
-
-                    return badRequest;
-                }
-
-                bool deleted =
-                    await _fileStorageService
-                        .DeleteDocumentAsync(fileName);
-
-                if (!deleted)
-                {
-                    var notFound =
-                        req.CreateResponse(
-                            HttpStatusCode.NotFound);
-
-                    await notFound.WriteAsJsonAsync(new
-                    {
-                        message =
-                            $"Document '{fileName}' was not found."
-                    });
-
-                    return notFound;
-                }
-
-                var response =
-                    req.CreateResponse(
-                        HttpStatusCode.OK);
-
-                await response.WriteAsJsonAsync(new
-                {
-                    message =
-                        $"Document '{fileName}' was deleted successfully."
-                });
-
-                return response;
-            }
-            catch (Exception ex)
-            {
-                var errorResponse =
-                    req.CreateResponse(
-                        HttpStatusCode.InternalServerError);
-
-                await errorResponse.WriteAsJsonAsync(new
-                {
-                    message =
-                        "An error occurred while deleting the document.",
-                    error = ex.Message
-                });
-
-                return errorResponse;
-            }
-        }
+        var document = await storage.UploadDocumentAsync(file);
+        return new CreatedResult($"/api/documents/download/{Uri.EscapeDataString(document.FileName)}", document);
     }
-}*/
+}

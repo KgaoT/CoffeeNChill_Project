@@ -1,126 +1,70 @@
-﻿using Azure.Storage.Blobs;
-using Azure.Storage.Blobs.Models;
+using Azure;
+using Azure.Storage.Files.Shares;
+using Azure.Storage.Files.Shares.Models;
 using CoffeeNChill.Functions.Interfaces;
 using CoffeeNChill.Functions.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 
-namespace CoffeeNChill.Functions.Services
+namespace CoffeeNChill.Functions.Services;
+
+// Azure Files implementation used with a real Azure Storage account.
+public class FileStorageService : IFileStorageService
 {
-    public class FileStorageService : IFileStorageService
+    private const string ShareName = "staff-docs";
+    private readonly ShareClient _shareClient;
+
+    public FileStorageService(IConfiguration configuration)
     {
-        private readonly BlobContainerClient _containerClient;
-
-        private const string ContainerName = "staff-docs";
-
-        public FileStorageService(IConfiguration configuration)
-        {
-            string connectionString =
-                configuration["AzureWebJobsStorage"]
-                ?? throw new InvalidOperationException(
-                    "AzureWebJobsStorage connection string is missing.");
-
-            BlobServiceClient blobServiceClient =
-                new BlobServiceClient(connectionString);
-
-            _containerClient =
-                blobServiceClient.GetBlobContainerClient(ContainerName);
-
-            _containerClient.CreateIfNotExists();
-        }
-
-        public async Task<StaffDocument> UploadDocumentAsync(
-            IFormFile file)
-        {
-            BlobClient blobClient =
-                _containerClient.GetBlobClient(file.FileName);
-
-            using Stream stream = file.OpenReadStream();
-
-            BlobHttpHeaders headers =
-                new BlobHttpHeaders
-                {
-                    ContentType = file.ContentType
-                };
-
-            await blobClient.UploadAsync(
-                stream,
-                new BlobUploadOptions
-                {
-                    HttpHeaders = headers
-                });
-
-            return new StaffDocument
-            {
-                FileName = file.FileName,
-                FileExtension = Path.GetExtension(file.FileName),
-                ContentType = file.ContentType,
-                FileSize = file.Length,
-                UploadedOn = DateTime.UtcNow,
-                ContainerName = ContainerName
-            };
-        }
-
-        public async Task<Stream?> DownloadDocumentAsync(
-            string fileName)
-        {
-            BlobClient blobClient =
-                _containerClient.GetBlobClient(fileName);
-
-            if (!await blobClient.ExistsAsync())
-            {
-                return null;
-            }
-
-            BlobDownloadInfo download =
-                await blobClient.DownloadAsync();
-
-            return download.Content;
-        }
-
-        public async Task<bool> DeleteDocumentAsync(
-            string fileName)
-        {
-            BlobClient blobClient =
-                _containerClient.GetBlobClient(fileName);
-
-            var response =
-                await blobClient.DeleteIfExistsAsync();
-
-            return response.Value;
-        }
-
-        public async Task<List<StaffDocument>> GetAllDocumentsAsync()
-        {
-            List<StaffDocument> documents =
-                new List<StaffDocument>();
-
-            await foreach (
-                BlobItem item
-                in _containerClient.GetBlobsAsync())
-            {
-                BlobClient blobClient =
-                    _containerClient.GetBlobClient(item.Name);
-
-                BlobProperties properties =
-                    await blobClient.GetPropertiesAsync();
-
-                documents.Add(new StaffDocument
-                {
-                    FileName = item.Name,
-                    FileExtension = Path.GetExtension(item.Name),
-                    ContentType =
-                        properties.ContentType ?? string.Empty,
-                    FileSize =
-                        properties.ContentLength,
-                    UploadedOn =
-                        properties.LastModified.DateTime,
-                    ContainerName = ContainerName
-                });
-            }
-
-            return documents;
-        }
+        var connectionString = configuration["DocumentsConnectionString"] ?? configuration["AzureWebJobsStorage"]
+            ?? throw new InvalidOperationException("A document storage connection string is missing.");
+        _shareClient = new ShareClient(connectionString, ShareName);
+        _shareClient.CreateIfNotExists();
     }
-}
 
+    public async Task<StaffDocument> UploadDocumentAsync(IFormFile file)
+    {
+        var name = Path.GetFileName(file.FileName);
+        var client = _shareClient.GetRootDirectoryClient().GetFileClient(name);
+        await client.CreateAsync(file.Length, new ShareFileCreateOptions
+        {
+            HttpHeaders = new ShareFileHttpHeaders { ContentType = file.ContentType }
+        });
+        await using var stream = file.OpenReadStream();
+        await client.UploadRangeAsync(new HttpRange(0, file.Length), stream);
+        return ToDocument(name, file.ContentType, file.Length, DateTime.UtcNow);
+    }
+
+    public async Task<Stream?> DownloadDocumentAsync(string fileName)
+    {
+        var client = _shareClient.GetRootDirectoryClient().GetFileClient(Path.GetFileName(fileName));
+        if (!await client.ExistsAsync()) return null;
+        return (await client.DownloadAsync()).Value.Content;
+    }
+
+    public async Task<bool> DeleteDocumentAsync(string fileName)
+    {
+        var client = _shareClient.GetRootDirectoryClient().GetFileClient(Path.GetFileName(fileName));
+        return (await client.DeleteIfExistsAsync()).Value;
+    }
+
+    public async Task<List<StaffDocument>> GetAllDocumentsAsync()
+    {
+        var documents = new List<StaffDocument>();
+        var directory = _shareClient.GetRootDirectoryClient();
+        await foreach (var item in directory.GetFilesAndDirectoriesAsync())
+        {
+            if (item.IsDirectory) continue;
+            var properties = (await directory.GetFileClient(item.Name).GetPropertiesAsync()).Value;
+            documents.Add(ToDocument(item.Name, properties.ContentType ?? "application/octet-stream",
+                properties.ContentLength, properties.LastModified.UtcDateTime));
+        }
+        return documents;
+    }
+
+    private static StaffDocument ToDocument(string name, string contentType, long size, DateTime uploadedOn) => new()
+    {
+        FileName = name, FileExtension = Path.GetExtension(name), ContentType = contentType,
+        FileSize = size, UploadedOn = uploadedOn, ContainerName = ShareName
+    };
+}

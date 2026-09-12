@@ -1,10 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using CoffeeNChill.Functions.Interfaces;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Azure.Functions.Worker;
 
-namespace CoffeeNChill.Functions.Functions.Staff_Documents
+namespace CoffeeNChill.Functions.Functions.StaffDocuments;
+
+public class ListStaffDocumentsFunction(IFileStorageService storage)
 {
-    internal class ListStaffDocumentsFunctions
-    {
-    }
+    [Function("ListStaffDocuments")]
+    public async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "documents")] HttpRequest req) =>
+        new OkObjectResult(await storage.GetAllDocumentsAsync());
 }

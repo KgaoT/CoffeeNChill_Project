@@ -1,0 +1,79 @@
+{
+  "info": {
+    "_postman_id": "ca47f96c-2017-4abb-ad37-2cd090627f68",
+    "name": "CoffeeNChill Part 1",
+    "description": "Tests every required menu and staff-document HTTP endpoint.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Menu",
+      "item": [
+        {
+          "name": "Create menu item",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"category\": \"{{category}}\",\n  \"id\": \"{{itemId}}\",\n  \"name\": \"Espresso\",\n  \"description\": \"Double-shot campus espresso\",\n  \"price\": 29.95,\n  \"isAvailable\": true\n}" },
+            "url": "{{baseUrl}}/api/menu"
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Created', () => pm.response.to.have.status(201));", "pm.test('Returns created SKU', () => pm.expect(pm.response.json().rowKey).to.eql(pm.environment.get('itemId')));"] } }]
+        },
+        {
+          "name": "Get all menu items",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/menu" },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('OK', () => pm.response.to.have.status(200));", "pm.test('Returns an array', () => pm.expect(pm.response.json()).to.be.an('array'));"] } }]
+        },
+        {
+          "name": "Get menu items by category",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/menu/category/{{category}}" },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('OK', () => pm.response.to.have.status(200));", "pm.test('All rows match category', () => pm.response.json().forEach(x => pm.expect(x.partitionKey).to.eql(pm.environment.get('category'))));"] } }]
+        },
+        {
+          "name": "Update menu item",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"price\": 31.50,\n  \"isAvailable\": false\n}" },
+            "url": "{{baseUrl}}/api/menu/{{category}}/{{itemId}}"
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('OK', () => pm.response.to.have.status(200));", "pm.test('Values updated', () => { const x = pm.response.json(); pm.expect(x.price).to.eql(31.5); pm.expect(x.isAvailable).to.eql(false); });"] } }]
+        },
+        {
+          "name": "Delete menu item",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/menu/{{category}}/{{itemId}}" },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('No content', () => pm.response.to.have.status(204));"] } }]
+        }
+      ]
+    },
+    {
+      "name": "Staff documents",
+      "item": [
+        {
+          "name": "Upload staff document",
+          "request": {
+            "method": "POST",
+            "body": { "mode": "formdata", "formdata": [{ "key": "file", "type": "file", "src": "sample-staff-document.txt" }] },
+            "url": "{{baseUrl}}/api/documents/upload"
+          },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('Created', () => pm.response.to.have.status(201));", "pm.test('Returns file metadata', () => pm.expect(pm.response.json().fileName).to.eql(pm.environment.get('fileName')));"] } }]
+        },
+        {
+          "name": "List staff documents",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/documents" },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('OK', () => pm.response.to.have.status(200));", "pm.test('Contains uploaded file', () => pm.expect(pm.response.json().some(x => x.fileName === pm.environment.get('fileName'))).to.eql(true));"] } }]
+        },
+        {
+          "name": "Download staff document",
+          "request": { "method": "GET", "url": "{{baseUrl}}/api/documents/download/{{fileName}}" },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('OK', () => pm.response.to.have.status(200));", "pm.test('Has content', () => pm.expect(pm.response.text().length).to.be.above(0));"] } }]
+        },
+        {
+          "name": "Delete staff document (extra)",
+          "request": { "method": "DELETE", "url": "{{baseUrl}}/api/documents/{{fileName}}" },
+          "event": [{ "listen": "test", "script": { "exec": ["pm.test('No content', () => pm.response.to.have.status(204));"] } }]
+        }
+      ]
+    }
+  ]
+}
