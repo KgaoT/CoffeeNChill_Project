@@ -1,7 +1,21 @@
-namespace CoffeeNChill.Functions.DTOs;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
-public class UpdateMenuItemRequest
+namespace CoffeeNChill.Functions.DTOs
 {
-    public double? Price { get; set; }
-    public bool? IsAvailable { get; set; }
+    public class UpdateMenuItemRequest
+    {
+        // Updated menu item name
+        public string Name { get; set; } = string.Empty;
+
+        // Updated description
+        public string Description { get; set; } = string.Empty;
+
+        // Updated price
+        public double Price { get; set; }
+
+        // Updated availability
+        public bool IsAvailable { get; set; }
+    }
 }

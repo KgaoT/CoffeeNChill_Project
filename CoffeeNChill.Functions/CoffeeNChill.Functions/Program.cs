@@ -20,7 +20,7 @@ builder.Services.AddSingleton<IFileStorageService>(services =>
 
     return mode.Equals("FileShare", StringComparison.OrdinalIgnoreCase)
         ? new FileStorageService(configuration)
-        : new AzuriteBlobStorageService(configuration);
+        : new TableStorageService(configuration);
 });
 
 if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
