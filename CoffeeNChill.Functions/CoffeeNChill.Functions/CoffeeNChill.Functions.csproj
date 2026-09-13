@@ -28,8 +28,4 @@
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="2.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Functions\MenuItems\" />
-  </ItemGroup>
-
 </Project>

@@ -12,7 +12,7 @@ var builder = FunctionsApplication.CreateBuilder(args);
 
 builder.ConfigureFunctionsWebApplication();
 
-builder.Services.AddSingleton<IMenuItemService, MenuItemService>();
+builder.Services.AddSingleton<ITableStorageService, MenuItemService>();
 builder.Services.AddSingleton<IFileStorageService>(services =>
 {
     var configuration = services.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>();

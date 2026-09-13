@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace CoffeeNChill.Functions.Services;
 
-public class MenuItemService : IMenuItemService
+public class MenuItemService : ITableStorageService
 {
     private const string TableName = "MenuItems";
     private readonly TableClient _tableClient;
