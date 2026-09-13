@@ -1,33 +1,18 @@
-using Azure.Monitor.OpenTelemetry.Exporter;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Azure.Functions.Worker.Builder;
-using Microsoft.Azure.Functions.Worker.OpenTelemetry;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using OpenTelemetry;
 using CoffeeNChill.Functions.Interfaces;
 using CoffeeNChill.Functions.Services;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 var builder = FunctionsApplication.CreateBuilder(args);
 
+//Configure Azure Functions 
+//Configure Azure Functions with ASP.NET Core HTTP intergration
 builder.ConfigureFunctionsWebApplication();
 
-builder.Services.AddSingleton<ITableStorageService, MenuItemService>();
-builder.Services.AddSingleton<IFileStorageService>(services =>
-{
-    var configuration = services.GetRequiredService<Microsoft.Extensions.Configuration.IConfiguration>();
-    var mode = configuration["DocumentStorageMode"] ?? "Blob";
+builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
+builder.Services.AddSingleton<IFileStorageService, FileStorageService>();
 
-    return mode.Equals("FileShare", StringComparison.OrdinalIgnoreCase)
-        ? new FileStorageService(configuration)
-        : new TableStorageService(configuration);
-});
-
-if (!string.IsNullOrEmpty(Environment.GetEnvironmentVariable("APPLICATIONINSIGHTS_CONNECTION_STRING")))
-{
-    builder.Services.AddOpenTelemetry()
-        .UseFunctionsWorkerDefaults()
-        .UseAzureMonitorExporter();
-}
 
 builder.Build().Run();
