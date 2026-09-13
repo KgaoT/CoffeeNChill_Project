@@ -18,7 +18,7 @@ Azure Functions API for CoffeeNChill menu management and centralized staff docum
 
 ## Prerequisites
 
-- .NET 10 SDK
+- .NET 8 SDK
 - Azure Functions Core Tools v4
 - Docker Desktop or Docker Engine
 - Postman
@@ -145,3 +145,4 @@ The video must show both standalone containers, `docker ps`, the complete succes
 | 10000 | Blob |
 | 10001 | Queue |
 | 10002 | Table |
+
