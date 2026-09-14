@@ -129,7 +129,7 @@ Current Git history contains five commits attributed to `KgaoT`. Add every membe
 
 | Group member | Student number | Contribution |
 |---|---|---|
-| KgaoT | TODO | Initial project structure and staff-document foundation |
+| Kgaogelo Tladi | ST10403879 | Initial project structure and staff-document foundation |
 | TODO | TODO | TODO |
 
 ## Demonstration video
