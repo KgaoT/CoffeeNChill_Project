@@ -22,6 +22,10 @@ Azure Functions API for CoffeeNChill menu management and centralized staff docum
 - Azure Functions Core Tools v4
 - Docker Desktop or Docker Engine
 - Postman
+- C#
+- Azure Table Storage
+- Azure File Storage
+- GitHub
 
 ## Run locally
 
