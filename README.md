@@ -129,12 +129,14 @@ Select **CoffeeNChill Local** and run the collection in order. The upload reques
 
 ## Group contributions
 
-Current Git history contains five commits attributed to `KgaoT`. Add every member below and ensure Git history contains at least five meaningful commits from each person.
+As of this update, `main` has 10 commits from `KgaoT` and this branch adds 7 from Sean Chihwendu (see `fix/part1-compliance`, merged via PR). **TODO**: Tetelo and Palee each need at least 5 meaningful commits on their own branches before submission; update their rows and the commit counts above once those land.
 
 | Group member | Student number | Contribution |
 |---|---|---|
 | Kgaogelo Tladi | ST10403879 | Initial project structure and staff-document foundation |
-| TODO | TODO | TODO |
+| Sean Chihwendu | TODO | Part 1 compliance audit and fixes: aligned Menu routes to the brief, added the missing GetMenuItemsByCategory endpoint, fixed partial price/availability updates, restored the Azurite Blob document-storage mode, fixed camelCase JSON serialization, and verified the Postman collection end to end locally and in Docker |
+| TODO (Tetelo) | TODO | TODO |
+| TODO (Palee) | TODO | TODO |
 
 ## Demonstration video
 
