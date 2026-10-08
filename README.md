@@ -129,7 +129,7 @@ Select **CoffeeNChill Local** and run the collection in order. The upload reques
 
 ## Group contributions
 
-As of this update, `main` has 10 commits from `KgaoT` and this branch adds 7 from Sean Chihwendu (see `fix/part1-compliance`, merged via PR). **TODO**: Tetelo and Palee each need at least 5 meaningful commits on their own branches before submission; update their rows and the commit counts above once those land.
+As of this update, `main` has 10 commits from `KgaoT` and 1 from Sean Chihwendu (`10772ac`), and this branch adds 8 more from Sean Chihwendu (see `fix/part1-compliance`, merged via PR). **TODO**: Tetelo and Palee each need at least 5 meaningful commits on their own branches before submission; update their rows and the commit counts above once those land.
 
 | Group member | Student number | Contribution |
 |---|---|---|
