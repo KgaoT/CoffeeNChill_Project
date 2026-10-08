@@ -116,8 +116,8 @@ docker push <dockerhub_username>/coffeenchill-azurite:v1.0
 
 Replace `<dockerhub_username>` and add the public image URLs before submission:
 
-- Functions image: **TODO – add public Docker Hub URL**
-- Azurite image: **TODO – add public Docker Hub URL**
+- Functions image: https://hub.docker.com/r/ghee9ine/coffeenchill-functions
+- Azurite image: **TODO – add public Docker Hub URL (optional: the brief only requires the Functions image)**
 
 ## Postman tests
 
