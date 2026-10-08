@@ -30,9 +30,9 @@ namespace CoffeeNChill.Functions.Functions.MenuItems
         [Function("GetAllMenuItems")]
         public async Task<HttpResponseData> Run(
             [HttpTrigger(
-            AuthorizationLevel.Function,
+            AuthorizationLevel.Anonymous,
             "get",
-            Route = "menuitems")]
+            Route = "menu")]
             HttpRequestData req)
         {
             _logger.LogInformation("Retrieving all menu items.");

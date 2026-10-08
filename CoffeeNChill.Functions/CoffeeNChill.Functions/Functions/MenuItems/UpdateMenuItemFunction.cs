@@ -27,9 +27,9 @@ namespace CoffeeNChill.Functions.Functions.MenuItems
         [Function("UpdateMenuItem")]
         public async Task<HttpResponseData> Run(
             [HttpTrigger(
-                AuthorizationLevel.Function,
+                AuthorizationLevel.Anonymous,
                 "put",
-                Route = "menuItems/{category}/{sku}")]
+                Route = "menu/{category}/{sku}")]
             HttpRequestData req,
             string category,
             string sku)
@@ -91,36 +91,53 @@ namespace CoffeeNChill.Functions.Functions.MenuItems
                     return badRequest;
                 }
 
-                // Validate Name
-                if (string.IsNullOrWhiteSpace(request.Name))
+                // Per the brief, this endpoint updates price and/or availability: at
+                // least one updatable field must be supplied, but none is mandatory
+                // on its own, and Name/Description are optional overrides.
+                if (request.Name is null && request.Description is null
+                    && request.Price is null && request.IsAvailable is null)
                 {
                     var badRequest =
                         req.CreateResponse(HttpStatusCode.BadRequest);
 
                     await badRequest.WriteAsJsonAsync(new
                     {
-                        error = "Name is required."
+                        error = "At least one of Name, Description, Price, or IsAvailable must be provided."
                     });
 
                     return badRequest;
                 }
 
-                // Validate Description
-                if (string.IsNullOrWhiteSpace(request.Description))
+                // Validate Name, only if supplied
+                if (request.Name is not null && string.IsNullOrWhiteSpace(request.Name))
                 {
                     var badRequest =
                         req.CreateResponse(HttpStatusCode.BadRequest);
 
                     await badRequest.WriteAsJsonAsync(new
                     {
-                        error = "Description is required."
+                        error = "Name cannot be blank."
                     });
 
                     return badRequest;
                 }
 
-                // Validate Price
-                if (request.Price <= 0)
+                // Validate Description, only if supplied
+                if (request.Description is not null && string.IsNullOrWhiteSpace(request.Description))
+                {
+                    var badRequest =
+                        req.CreateResponse(HttpStatusCode.BadRequest);
+
+                    await badRequest.WriteAsJsonAsync(new
+                    {
+                        error = "Description cannot be blank."
+                    });
+
+                    return badRequest;
+                }
+
+                // Validate Price, only if supplied
+                if (request.Price is <= 0)
                 {
                     var badRequest =
                         req.CreateResponse(HttpStatusCode.BadRequest);

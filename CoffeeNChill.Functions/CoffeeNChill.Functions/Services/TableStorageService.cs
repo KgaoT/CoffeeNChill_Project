@@ -1,16 +1,11 @@
 using Azure;
-using Azure.Core;
 using Azure.Data.Tables;
 using CoffeeNChill.Functions.DTOs;
 using CoffeeNChill.Functions.Interfaces;
 using CoffeeNChill.Functions.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using static Grpc.Core.Metadata;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace CoffeeNChill.Functions.Services
 {
@@ -24,9 +19,9 @@ namespace CoffeeNChill.Functions.Services
         public TableStorageService(IConfiguration configuration)
         {
             string connectionString =
-                configuration["AzurewebJobsStorage"]
+                configuration["AzureWebJobsStorage"]
                 ?? throw new InvalidOperationException(
-                    "AzurewebJobsStorage connection string is missing.");
+                    "AzureWebJobsStorage connection string is missing.");
 
             _tableClient = new TableClient(connectionString, "MenuItems");
 
@@ -127,11 +122,13 @@ namespace CoffeeNChill.Functions.Services
 
                 MenuItem menuItem = response.Value;
 
-                // Update the entity
-                menuItem.Name = request.Name;
-                menuItem.Description = request.Description;
-                menuItem.Price = request.Price;
-                menuItem.IsAvailable = request.IsAvailable;
+                // Merge: only overwrite fields the caller actually supplied, so a
+                // price-only or availability-only update (the brief's own example)
+                // never clobbers the rest of the entity with empty/default values.
+                if (request.Name is not null) menuItem.Name = request.Name;
+                if (request.Description is not null) menuItem.Description = request.Description;
+                if (request.Price is not null) menuItem.Price = request.Price.Value;
+                if (request.IsAvailable is not null) menuItem.IsAvailable = request.IsAvailable.Value;
 
                 // Save the updated entity
                 await _tableClient.UpdateEntityAsync(
