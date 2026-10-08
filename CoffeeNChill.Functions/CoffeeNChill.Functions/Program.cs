@@ -28,6 +28,7 @@ builder.Services.Configure<Microsoft.Azure.Functions.Worker.WorkerOptions>(optio
 });
 
 builder.Services.AddSingleton<ITableStorageService, TableStorageService>();
+builder.Services.AddSingleton<IQueueService, QueueService>();
 
 // Document storage mode switch: Azurite does not emulate Azure Files, so
 // FileStorageService's ShareClient.CreateIfNotExists() throws against it and
