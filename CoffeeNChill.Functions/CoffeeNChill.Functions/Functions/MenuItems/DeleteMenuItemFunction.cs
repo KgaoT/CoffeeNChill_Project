@@ -28,9 +28,9 @@ namespace CoffeeNChill.Functions.Functions
         [Function("DeleteMenuItem")]
         public async Task<HttpResponseData> Run(
             [HttpTrigger(
-                AuthorizationLevel.Function,
+                AuthorizationLevel.Anonymous,
                 "delete",
-                Route = "menuitems/{category}/{sku}")]
+                Route = "menu/{category}/{sku}")]
             HttpRequestData req,
             string category,
             string sku)

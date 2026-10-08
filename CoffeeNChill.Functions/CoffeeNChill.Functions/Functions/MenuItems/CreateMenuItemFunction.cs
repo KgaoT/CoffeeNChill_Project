@@ -32,9 +32,9 @@ namespace CoffeeNChill.Functions.Functions
 
         public async Task<HttpResponseData> Run(
             [HttpTrigger(
-                    AuthorizationLevel.Function,
+                    AuthorizationLevel.Anonymous,
                     "post",
-                    Route = "menuitems")]
+                    Route = "menu")]
                     HttpRequestData req)
         {
             _logger.LogInformation("Creating a new menu item.");
