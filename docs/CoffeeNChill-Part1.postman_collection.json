@@ -14,7 +14,7 @@
           "request": {
             "method": "POST",
             "header": [{ "key": "Content-Type", "value": "application/json" }],
-            "body": { "mode": "raw", "raw": "{\n  \"category\": \"{{category}}\",\n  \"id\": \"{{itemId}}\",\n  \"name\": \"Espresso\",\n  \"description\": \"Double-shot campus espresso\",\n  \"price\": 29.95,\n  \"isAvailable\": true\n}" },
+            "body": { "mode": "raw", "raw": "{\n  \"category\": \"{{category}}\",\n  \"sku\": \"{{itemId}}\",\n  \"name\": \"Espresso\",\n  \"description\": \"Double-shot campus espresso\",\n  \"price\": 29.95,\n  \"isAvailable\": true\n}" },
             "url": "{{baseUrl}}/api/menu"
           },
           "event": [{ "listen": "test", "script": { "exec": ["pm.test('Created', () => pm.response.to.have.status(201));", "pm.test('Returns created SKU', () => pm.expect(pm.response.json().rowKey).to.eql(pm.environment.get('itemId')));"] } }]
