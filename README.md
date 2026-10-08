@@ -15,6 +15,7 @@ Azure Functions API for CoffeeNChill menu management and centralized staff docum
 | GET | `/api/documents` | List staff documents and metadata |
 | GET | `/api/documents/download/{fileName}` | Download a document |
 | DELETE | `/api/documents/{fileName}` | Delete a document (additional endpoint) |
+| POST | `/api/orders/queue` | Queue a new order onto `orders-queue` (Part 2 producer; see `docs/CONTRACTS.md`) |
 
 ## Prerequisites
 
@@ -127,14 +128,16 @@ Import both files from `/docs`:
 
 Select **CoffeeNChill Local** and run the collection in order. The upload request uses `/docs/sample-staff-document.txt`; reselect that file in Postman if its imported path is not resolved automatically.
 
+`CoffeeNChill-Part2-Orders.postman_collection.json` covers the order queue producer (`POST /api/orders/queue`) against the same **CoffeeNChill Local** environment.
+
 ## Group contributions
 
-As of this update, `main` has 10 commits from `KgaoT` and 1 from Sean Chihwendu (`10772ac`), and this branch adds 8 more from Sean Chihwendu (see `fix/part1-compliance`, merged via PR). **TODO**: Tetelo and Palee each need at least 5 meaningful commits on their own branches before submission; update their rows and the commit counts above once those land.
+As of this update, `main` has 10 commits from `KgaoT` and 1 from Sean Chihwendu (`10772ac`); `fix/part1-compliance` adds 8 more and `feature/order-queue-producer` adds a further 6, both from Sean Chihwendu. **TODO**: Tetelo and Palee each need at least 5 meaningful commits on their own branches before submission; update their rows and the commit counts above once those land.
 
 | Group member | Student number | Contribution |
 |---|---|---|
 | Kgaogelo Tladi | ST10403879 | Initial project structure and staff-document foundation |
-| Sean Chihwendu | TODO | Part 1 compliance audit and fixes: aligned Menu routes to the brief, added the missing GetMenuItemsByCategory endpoint, fixed partial price/availability updates, restored the Azurite Blob document-storage mode, fixed camelCase JSON serialization, and verified the Postman collection end to end locally and in Docker |
+| Sean Chihwendu | TODO | Part 1 compliance audit and fixes (routes, missing endpoint, document-storage mode, serialization, Postman); Part 2 order queue producer (`POST /api/orders/queue`, full payload validation, Base64-encoded queue messages, shared `StorageNames` constants and `docs/CONTRACTS.md` for the rest of the group) |
 | TODO (Tetelo) | TODO | TODO |
 | TODO (Palee) | TODO | TODO |
 
