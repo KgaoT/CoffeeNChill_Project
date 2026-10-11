@@ -241,7 +241,7 @@ Initial project structure, menu CRUD, staff-document upload/list/download/delete
 
 ## Group contributions
 
-`main` has 10 commits from `KgaoT` and 38 from Sean Chihwendu, across six merged PRs: Part 1 compliance fixes, the order queue producer, producer brief alignment, queue-triggered order processing, Docker Compose + Docker Hub `v2.0`, and the Part 2 Postman/documentation deliverables (PRs #1-#6). **TODO**: Tetelo and Palee each need at least 5 meaningful commits on their own branches before submission; update their rows and the commit count above once those land.
+`main` has 10 commits from `KgaoT` and 40 from Sean Chihwendu, across six merged PRs: Part 1 compliance fixes, the order queue producer, producer brief alignment, queue-triggered order processing, Docker Compose + Docker Hub `v2.0`, and the Part 2 Postman/documentation deliverables (PRs #1-#6). **TODO**: Tetelo and Palee each need at least 5 meaningful commits on their own branches before submission; update their rows and the commit count above once those land.
 
 | Group member | Student number | Contribution |
 |---|---|---|
