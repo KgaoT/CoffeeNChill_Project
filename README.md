@@ -94,6 +94,20 @@ No Docker Compose is required.
 
 Inside a container, `UseDevelopmentStorage=true` would point to that same container rather than the separate Azurite container. The explicit connection string above therefore uses the Azurite container hostname.
 
+## Docker Compose (Part 2, `v2.0`)
+
+A single command starts the whole stack - Azurite and the Functions host, both pulled from Docker Hub:
+
+```bash
+docker compose up -d
+```
+
+This pulls `ghee9ine/coffeenchill-azurite:v2.0` and `ghee9ine/coffeenchill-functions:v2.0` (overridable via `DOCKERHUB_USERNAME`/`IMAGE_TAG` - copy `.env.example` to `.env` to change them), starts Azurite on a named volume (`azurite-data`, so table/queue/blob data survives a restart) on the custom `coffeenchill-net` bridge network, waits for Azurite's healthcheck before starting the Functions container, and exposes the same ports as the manual setup above (`7071` for the API, `10000`-`10002` for Azurite).
+
+Verified from a clean slate (`docker compose down -v`, `docker image rm` both `v2.0` images, then `docker compose up -d`): both images pull from Docker Hub rather than building locally, both containers report healthy/running, `docker logs coffeenchill-functions` lists all 13 HTTP routes and both queue triggers (`ProcessOrderQueue`, `ProcessPoisonOrders`), and a queued order runs the full `Received -> Preparing -> Ready -> Collected` lifecycle against the running containers.
+
+Tear down with `docker compose down` (add `-v` to also delete the Azurite data volume).
+
 ## Azure File Share mode
 
 Azurite supports Blob, Queue and Table services, but not Azure Files. To run the document API against the required real Azure File Share, set:
@@ -109,15 +123,19 @@ The application creates the `staff-docs` share automatically. For the isolated l
 
 ```bash
 docker login
-docker push <dockerhub_username>/coffeenchill-functions:v1.0
-docker tag coffeenchill-azurite:v1.0 <dockerhub_username>/coffeenchill-azurite:v1.0
-docker push <dockerhub_username>/coffeenchill-azurite:v1.0
+docker build -t ghee9ine/coffeenchill-functions:v2.0 CoffeeNChill.Functions/CoffeeNChill.Functions
+docker push ghee9ine/coffeenchill-functions:v2.0
+docker pull mcr.microsoft.com/azure-storage/azurite
+docker tag mcr.microsoft.com/azure-storage/azurite ghee9ine/coffeenchill-azurite:v2.0
+docker push ghee9ine/coffeenchill-azurite:v2.0
 ```
 
-Replace `<dockerhub_username>` and add the public image URLs before submission:
+Published images (public):
 
-- Functions image: https://hub.docker.com/r/ghee9ine/coffeenchill-functions
-- Azurite image: **TODO – add public Docker Hub URL (optional: the brief only requires the Functions image)**
+- Functions `v2.0`: https://hub.docker.com/r/ghee9ine/coffeenchill-functions
+- Azurite `v2.0`: https://hub.docker.com/r/ghee9ine/coffeenchill-azurite
+
+The `v1.0` tags above remain published from Part 1; `v2.0` is what `docker-compose.yml` pulls by default.
 
 ## Postman tests
 
