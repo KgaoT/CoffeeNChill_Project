@@ -18,15 +18,18 @@ namespace CoffeeNChill.Functions.Functions.Orders
         private const int DefaultStepDelaySeconds = 3;
 
         private readonly IOrderService _orderService;
+        private readonly OrderMenuChecker _menuChecker;
         private readonly int _stepDelaySeconds;
         private readonly ILogger<ProcessOrderQueueFunction> _logger;
 
         public ProcessOrderQueueFunction(
             IOrderService orderService,
+            OrderMenuChecker menuChecker,
             IConfiguration configuration,
             ILogger<ProcessOrderQueueFunction> logger)
         {
             _orderService = orderService;
+            _menuChecker = menuChecker;
             _logger = logger;
 
             _stepDelaySeconds = int.TryParse(configuration["OrderStatusStepDelaySeconds"], out int configured)
@@ -68,17 +71,29 @@ namespace CoffeeNChill.Functions.Functions.Orders
                 throw;
             }
 
-            if (order is null || string.IsNullOrWhiteSpace(order.OrderId))
+            // Structural checks first, then the menu lookup. An invalid order
+            // can never become valid on retry, so it is recorded in the
+            // FailedOrders table and the message is completed, instead of
+            // being retried until it reaches the poison queue.
+            var errors = new List<string>(OrderMessageValidator.Validate(order));
+
+            if (errors.Count == 0)
+                errors.AddRange(await _menuChecker.FindUnknownItemsAsync(order!));
+
+            if (errors.Count > 0)
             {
+                string reason = string.Join(" ", errors);
+
                 _logger.LogError(
-                    "Order message {MessageId} is missing required fields (OrderId). Raw body: {RawBody}",
+                    "Order message {MessageId} rejected: {Reason}",
                     messageId,
-                    messageText);
-                throw new InvalidOperationException(
-                    $"Order message {messageId} is missing required fields (OrderId).");
+                    reason);
+
+                await _orderService.LogFailedOrderAsync(messageId, messageText, reason);
+                return;
             }
 
-            var (entity, wasRedelivery) = await _orderService.CreateAsync(order);
+            var (entity, wasRedelivery) = await _orderService.CreateAsync(order!); ;
 
             if (wasRedelivery)
             {
