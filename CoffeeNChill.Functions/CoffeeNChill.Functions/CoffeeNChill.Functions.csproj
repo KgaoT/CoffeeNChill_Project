@@ -32,7 +32,6 @@
     <Folder Include="Functions\MenuItems\" />
     <Folder Include="DTOs\" />
     <Folder Include="Interfaces\" />
-    <Folder Include="Models\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

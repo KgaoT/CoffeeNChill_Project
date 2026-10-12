@@ -1,0 +1,136 @@
+{
+  "info": {
+    "name": "CoffeeNChill Part 2 - Order Queue Producer",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Queue a valid order",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"customerName\":\"Thandi\",\"items\":[{\"category\":\"Hot Drinks\",\"sku\":\"CAP-001\",\"quantity\":2},{\"category\":\"Pastries\",\"sku\":\"CRO-003\",\"quantity\":1}]}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/orders/queue"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Accepted', () => pm.response.to.have.status(202));",
+            "pm.test('Returns a server-generated orderId', () => pm.expect(pm.response.json().orderId).to.be.a('string').and.not.empty);",
+            "pm.test('Returns itemCount matching the payload', () => pm.expect(pm.response.json().itemCount).to.eql(2));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Queue order without customer name (optional field)",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"items\":[{\"category\":\"Hot Drinks\",\"sku\":\"CAP-001\",\"quantity\":1}]}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/orders/queue"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Accepted', () => pm.response.to.have.status(202));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Reject empty items list",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"customerName\":\"Thandi\",\"items\":[]}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/orders/queue"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Bad request', () => pm.response.to.have.status(400));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Reject item with missing SKU",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"items\":[{\"category\":\"Hot Drinks\",\"sku\":\"\",\"quantity\":1}]}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/orders/queue"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Bad request', () => pm.response.to.have.status(400));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Reject non-positive quantity",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"items\":[{\"category\":\"Hot Drinks\",\"sku\":\"CAP-001\",\"quantity\":0}]}",
+          "options": { "raw": { "language": "json" } }
+        },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/orders/queue"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Bad request', () => pm.response.to.have.status(400));"
+          ]
+        }
+      }]
+    },
+    {
+      "name": "Reject malformed JSON body",
+      "request": {
+        "method": "POST",
+        "body": {
+          "mode": "raw",
+          "raw": "not json",
+          "options": { "raw": { "language": "text" } }
+        },
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": "{{baseUrl}}/api/orders/queue"
+      },
+      "event": [{
+        "listen": "test",
+        "script": {
+          "exec": [
+            "pm.test('Bad request', () => pm.response.to.have.status(400));"
+          ]
+        }
+      }]
+    }
+  ]
+}
