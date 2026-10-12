@@ -20,8 +20,10 @@ namespace CoffeeNChill.Functions.Services
                 return errors;
             }
 
-            if (string.IsNullOrWhiteSpace(order.OrderId))
-                errors.Add("OrderId is missing.");
+            // The producer allows anonymous orders, so a missing name is
+            // valid; only a blank name is rejected.
+            if (order.CustomerName is not null && string.IsNullOrWhiteSpace(order.CustomerName))
+                errors.Add("CustomerName cannot be blank when provided.");
 
             if (string.IsNullOrWhiteSpace(order.CustomerName))
                 errors.Add("CustomerName is missing.");
