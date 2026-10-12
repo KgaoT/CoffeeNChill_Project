@@ -32,6 +32,8 @@ namespace CoffeeNChill.Functions.Services
 
                 if (menuItem is null)
                     errors.Add($"Menu item not found: category '{category}', SKU '{sku}'.");
+                else if (!menuItem.IsAvailable)
+                    errors.Add($"Menu item unavailable: category '{category}', SKU '{sku}'.");
             }
 
             return errors;
