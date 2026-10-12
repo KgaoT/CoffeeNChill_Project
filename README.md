@@ -248,7 +248,12 @@ Initial project structure, menu CRUD, staff-document upload/list/download/delete
 | Kgaogelo Tladi | ST10403879 | Initial project structure and staff-document foundation |
 | Sean Chihwendu | ST10455091 | Part 1 compliance audit and fixes (routes, missing endpoint, document-storage mode, serialization, Postman); all of Part 2 - order queue producer aligned to the brief's contract (SKU validation, server-computed pricing, Base64 encoding), queue-triggered order processing with the full status lifecycle and poison-queue handling, Docker Compose + Docker Hub `v2.0`, and the Part 2 Postman collection/test scripts/documentation |
 | TODO (Tetelo) | TODO | TODO |
-| TODO (Palee) | TODO | TODO |
+| TODO (Palee) | ST10403879 | Part 1: Standalone Application Setup. Configured and ran the CoffeeNChill Azure Functions application in a standalone environment. Verified that the Azure Functions host started successfully, with the logs displaying Job host started.
+
+Captured screenshots as evidence of the completed setup.
+
+Part 2: Docker Containerisation. Configured the Docker build context and corrected the .dockerignore configuration. Built the Docker image for the CoffeeNChill Functions application.
+Tagged the image as kgaot/coffeenchill-functions:v2.0. Successfully pushed the Docker image to the configured container registry. |
 
 ## Demonstration video
 
