@@ -6,10 +6,13 @@
 <img width="1470" height="956" alt="funcs" src="https://github.com/user-attachments/assets/746e35be-5bb7-4f01-ac79-2b937ac9191a" />
 
 ## GET /api/menu
-<img width="1470" height="956" alt="getit" src="https://github.com/user-attachments/assets/fd8f1944-2ba9-4aae-8acb-d400c561c69d" />##  POST /api/menu
+<img width="1470" height="956" alt="getit" src="https://github.com/user-attachments/assets/fd8f1944-2ba9-4aae-8acb-d400c561c69d" />
+
+##  POST /api/menu
+<img width="1470" height="956" alt="postit" src="https://github.com/user-attachments/assets/713d4b26-4cbd-451e-beb9-0eaa8dab0d94" />
 
 ##  PUT /api/menu
-<img width="1470" height="956" alt="putit" src="https://github.com/user-attachments/assets/af5137f2-dc7e-411b-89c8-9d92552a0a96" />##  DELETE /api/menu
+<img width="1470" height="956" alt="putit" src="https://github.com/user-attachments/assets/af5137f2-dc7e-411b-89c8-9d92552a0a96" />
 
 ##  DELETE /api/menu
 <img width="1470" height="956" alt="itemdel" src="https://github.com/user-attachments/assets/84cc3388-87f8-4b30-b6a4-c4b00e703b8c" />
