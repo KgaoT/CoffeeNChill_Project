@@ -1,4 +1,5 @@
-﻿using CoffeeNChill.API.DTOs.Menu;
+using Microsoft.AspNetCore.Authorization;
+using CoffeeNChill.API.DTOs.Menu;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeNChill.API.Controllers
@@ -6,6 +7,7 @@ namespace CoffeeNChill.API.Controllers
     /// <summary>
     /// Provides API endpoints for managing CoffeeNChill menu items.
     /// </summary>
+    [Authorize(Policy = "StaffOrAdmin")]
     [ApiController]
     [Route("api/menu")]
     public class MenuController : ControllerBase
@@ -21,6 +23,7 @@ namespace CoffeeNChill.API.Controllers
         /// Retrieves all available menu items.
         /// </summary>
         /// <returns>A list of menu items.</returns>
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAllMenuItems()
         {
