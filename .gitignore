@@ -1,0 +1,6 @@
+# Azurite generated storage files
+**/_azurite_db_*
+**/_blobstorage_/**
+
+# Local development files
+**/Azurite/

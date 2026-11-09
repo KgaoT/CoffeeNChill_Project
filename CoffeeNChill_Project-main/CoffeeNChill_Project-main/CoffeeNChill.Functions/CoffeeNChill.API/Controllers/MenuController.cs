@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeNChill.API.Controllers
 {
+    /// <summary>
+    /// Provides API endpoints for managing CoffeeNChill menu items.
+    /// </summary>
     [ApiController]
     [Route("api/menu")]
     public class MenuController : ControllerBase
@@ -14,7 +17,10 @@ namespace CoffeeNChill.API.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        // GET: api/menu
+        /// <summary>
+        /// Retrieves all available menu items.
+        /// </summary>
+        /// <returns>A list of menu items.</returns>
         [HttpGet]
         public async Task<IActionResult> GetAllMenuItems()
         {
@@ -33,7 +39,11 @@ namespace CoffeeNChill.API.Controllers
             };
         }
 
-        // POST: api/menu
+        /// <summary>
+        /// Creates a new menu item.
+        /// </summary>
+        /// <param name="request">The menu item details.</param>
+        /// <returns>The response from the Azure Function.</returns>
         [HttpPost]
         public async Task<IActionResult> CreateMenuItem(
             [FromBody] CreateMenuItemRequest request)
@@ -54,7 +64,13 @@ namespace CoffeeNChill.API.Controllers
             };
         }
 
-        // PUT: api/menu/{category}/{sku}
+        /// <summary>
+        /// Updates an existing menu item.
+        /// </summary>
+        /// <param name="category">The menu item's category.</param>
+        /// <param name="sku">The menu item's unique SKU.</param>
+        /// <param name="request">The updated menu item details.</param>
+        /// <returns>The response from the Azure Function.</returns>
         [HttpPut("{category}/{sku}")]
         public async Task<IActionResult> UpdateMenuItem(
             string category,
@@ -78,7 +94,12 @@ namespace CoffeeNChill.API.Controllers
             };
         }
 
-        // DELETE: api/menu/{category}/{sku}
+        /// <summary>
+        /// Deletes an existing menu item.
+        /// </summary>
+        /// <param name="category">The menu item's category.</param>
+        /// <param name="sku">The menu item's unique SKU.</param>
+        /// <returns>The response from the Azure Function.</returns>
         [HttpDelete("{category}/{sku}")]
         public async Task<IActionResult> DeleteMenuItem(
             string category,
@@ -93,3 +114,4 @@ namespace CoffeeNChill.API.Controllers
         }
     }
 }
+
