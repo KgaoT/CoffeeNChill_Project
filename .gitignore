@@ -4,3 +4,10 @@
 
 # Local development files
 **/Azurite/
+**/bin/
+**/obj/
+.env
+.env.*
+!.env.example
+**/appsettings.Local.json
+**/local.settings.json
