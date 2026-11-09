@@ -1,6 +1,6 @@
 ﻿namespace CoffeeNChill.API.DTOs.Orders
 {
-    public class UpdateOrderRequest
+    public class UpdateOrderStatusRequest
     {
         public string OrderId { get; set; } = string.Empty;
 
