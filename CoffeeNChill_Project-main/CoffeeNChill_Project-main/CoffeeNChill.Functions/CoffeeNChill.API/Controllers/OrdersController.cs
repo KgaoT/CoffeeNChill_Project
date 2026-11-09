@@ -1,4 +1,5 @@
-﻿using CoffeeNChill.API.DTOs.Orders;
+using Microsoft.AspNetCore.Authorization;
+using CoffeeNChill.API.DTOs.Orders;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeNChill.API.Controllers
@@ -6,6 +7,7 @@ namespace CoffeeNChill.API.Controllers
     /// <summary>
     /// Provides API endpoints for managing customer orders.
     /// </summary>
+    [Authorize(Policy = "StaffOrAdmin")]
     [ApiController]
     [Route("api/orders")]
     public class OrdersController : ControllerBase
@@ -22,6 +24,7 @@ namespace CoffeeNChill.API.Controllers
         /// </summary>
         /// <param name="request">The customer order details.</param>
         /// <returns>The response from the Azure Function.</returns>
+        [AllowAnonymous]
         [HttpPost("queue")]
         public async Task<IActionResult> QueueOrder(
             [FromBody] CreateOrderRequest request)
