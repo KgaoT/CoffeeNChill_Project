@@ -1,4 +1,5 @@
-﻿using CoffeeNChill.API.DTOs.Documents;
+using Microsoft.AspNetCore.Authorization;
+using CoffeeNChill.API.DTOs.Documents;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CoffeeNChill.API.Controllers
@@ -6,6 +7,7 @@ namespace CoffeeNChill.API.Controllers
     /// <summary>
     /// Provides API endpoints for managing staff documents.
     /// </summary>
+    [Authorize(Policy = "StaffOrAdmin")]
     [ApiController]
     [Route("api/documents")]
     public class DocumentsController : ControllerBase
